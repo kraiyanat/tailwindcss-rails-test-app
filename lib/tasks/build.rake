@@ -1,6 +1,10 @@
 
 require "#{Rails.root.join('config/initializers/tailwind.rb')}"
 
+def check_if_string_is_integer?(string)
+  /\A[-+]?\d+\z/ === string
+end
+
 FULL_GEM_PATH = Gem.loaded_specs['tailwindcss-rails'].full_gem_path
 
 TAILWIND_COMPILE_COMMANDS = Tailwindcss::Configuration::COMPILE_FILES_CONFIGURATION.map do |files_set|
@@ -18,8 +22,12 @@ namespace :tailwindcss do
   end
 
   desc "Watch and build your Tailwind CSS on file changes"
-  task :watch do 
-    system "#{TAILWIND_COMPILE_COMMANDS[0]} -w"
+  task :watch, [:index] do |task, args| 
+    raise "ERROR!! No index providing" if args[:index].nil?
+    raise "ERROR!! Index should be integer" unless check_if_string_is_integer?(args[:index])
+    raise "ERROR!! Incorrect index" unless TAILWIND_COMPILE_COMMANDS[args[:index].to_i]
+    
+    system "#{TAILWIND_COMPILE_COMMANDS[args[:index].to_i]} -w"
   end
 end
 

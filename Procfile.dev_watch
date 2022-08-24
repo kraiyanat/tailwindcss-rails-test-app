@@ -1,0 +1,2 @@
+css_1: bin/rails tailwindcss:watch\[0\]
+css_2: bin/rails tailwindcss:watch\[1\]
